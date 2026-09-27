@@ -1,0 +1,33 @@
+name: Update Indian Stocks Master
+
+on:
+  schedule:
+    # Runs Monday to Friday at 11:30 AM UTC (5:00 PM IST, right after market close)
+    - cron: '30 11 * * 1-5'
+  workflow_dispatch: # Allows you to manually trigger it anytime by clicking a button
+
+jobs:
+  scrape-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Run Script
+        run: python update_stocks.py
+
+      - name: Commit & Overwrite CSV
+        run: |
+          git config --global user.name "MarketDataBot"
+          git config --global user.email "bot@github.com"
+          git add Live_Indian_Stocks.csv
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update stock data [skip ci]" && git push)
