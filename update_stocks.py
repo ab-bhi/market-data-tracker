@@ -18,7 +18,7 @@ def fetch_screener_data():
     # Using a while loop to keep going until there are no more pages
     while True:
         # We removed the >0 rule so it catches everything, including 0 cap stocks
-        url = f"https://www.screener.in/screen/raw/?sort=current+price&order=asc&source_id=&page={page}"
+        url = f"https://www.screener.in/screen/raw/?sort=current+price&order=asc&source_id=&query=Market+Capitalization+%3E+0&page={page}"
         try:
             res = requests.get(url, headers=HEADERS, timeout=15)
             if res.status_code != 200:
